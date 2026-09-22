@@ -8,6 +8,7 @@ import {
 } from "../contracts/contract";
 import type { TransferFormValues, TransferRecord, TxStatus } from "../types";
 import { parseError } from "../utils/errors";
+import { hasInjectedProvider } from "../utils/injected";
 import { useWallet } from "./useWallet";
 
 /**
@@ -143,7 +144,7 @@ export function useTransactions() {
       setSendError(null);
       setTxHash(null);
 
-      if (!window.ethereum) {
+      if (!hasInjectedProvider()) {
         setSendError("MetaMask is not installed. Install it to continue.");
         setStatus("failed");
         return null;

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { BrowserProvider, type JsonRpcSigner } from "ethers";
 import { SEPOLIA_CHAIN_ID, SEPOLIA_CHAIN_ID_HEX } from "../contracts/contract";
 import { isUserRejection, parseError } from "../utils/errors";
+import { getInjectedProvider, supportsEvents } from "../utils/injected";
 import { WalletContext, type WalletState } from "./WalletContext";
 
 /** MetaMask returns this when the requested chain is not in the wallet yet. */
@@ -17,7 +18,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const hasMetaMask = typeof window !== "undefined" && Boolean(window.ethereum);
+  const hasMetaMask = getInjectedProvider() !== null;
   const isCorrectNetwork = chainId === SEPOLIA_CHAIN_ID;
 
   // Lets the long-lived event listeners read the current account without being
@@ -31,10 +32,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const clearError = useCallback(() => setError(null), []);
 
   const readBalance = useCallback(async (address: string) => {
-    if (!window.ethereum) return;
+    const injected = getInjectedProvider();
+    if (!injected) return;
     setIsLoadingBalance(true);
     try {
-      const next = new BrowserProvider(window.ethereum);
+      const next = new BrowserProvider(injected);
       setBalance(await next.getBalance(address));
     } catch (err) {
       console.error("[krypt] balance", err);
@@ -47,8 +49,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   /** Rebuild provider/signer/balance from whatever MetaMask currently reports. */
   const syncWallet = useCallback(
     async (address: string) => {
-      if (!window.ethereum) return;
-      const nextProvider = new BrowserProvider(window.ethereum);
+      const injected = getInjectedProvider();
+      if (!injected) return;
+      const nextProvider = new BrowserProvider(injected);
       const network = await nextProvider.getNetwork();
       setProvider(nextProvider);
       setChainId(network.chainId);
@@ -71,14 +74,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const connect = useCallback(async () => {
-    if (!window.ethereum) {
+    const injected = getInjectedProvider();
+    if (!injected) {
       setError("MetaMask is not installed. Install it to continue.");
       return;
     }
     setIsConnecting(true);
     setError(null);
     try {
-      const nextProvider = new BrowserProvider(window.ethereum);
+      const nextProvider = new BrowserProvider(injected);
       const accounts: string[] = await nextProvider.send("eth_requestAccounts", []);
       if (!accounts.length) {
         setError("No accounts were shared by MetaMask.");
@@ -100,13 +104,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [reset]);
 
   const switchToSepolia = useCallback(async () => {
-    if (!window.ethereum) {
+    const injected = getInjectedProvider();
+    if (!injected) {
       setError("MetaMask is not installed.");
       return;
     }
     setError(null);
     try {
-      await window.ethereum.request({
+      await injected.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: SEPOLIA_CHAIN_ID_HEX }],
       });
@@ -114,7 +119,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const code = (err as { code?: number }).code;
       if (code === CHAIN_NOT_ADDED) {
         try {
-          await window.ethereum.request({
+          await injected.request({
             method: "wallet_addEthereumChain",
             params: [
               {
@@ -145,7 +150,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   // Restore a session MetaMask already authorised, without prompting.
   useEffect(() => {
-    const injected = window.ethereum;
+    const injected = getInjectedProvider();
     if (!injected) return;
     let cancelled = false;
     void (async () => {
@@ -164,8 +169,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   // A single subscription for the lifetime of the provider — never per render.
   useEffect(() => {
-    const injected = window.ethereum;
-    if (!injected) return;
+    const injected = getInjectedProvider();
+    if (!injected || !supportsEvents(injected)) return;
 
     const onAccountsChanged = (accounts: string[]) => {
       if (!accounts.length) reset();

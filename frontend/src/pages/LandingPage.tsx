@@ -100,7 +100,7 @@ export function LandingPage() {
           <ol className="lp-four-grid lp-steps">{steps.map((step, index) => <li className="lp-card" key={step.title}><div className="lp-step-top"><span className="lp-step-number">{index + 1}</span><LandingIcon name={step.icon} /></div><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
         </div>
       </section>
-      <section id="ethereum" className="lp-section">
+      <section id="ethereum-network" className="lp-section">
         <div className="lp-container lp-two-column">
           <div><p className="lp-eyebrow">POWERED BY BLOCKCHAIN</p><h2>Built on Ethereum.<br /><em>Open to a Bigger World.</em></h2><p className="lp-lead">A global network. A shared foundation. Ethereum brings programmable transactions to a world of decentralized finance, digital collectibles and Web3 applications.</p><p className="lp-caption">Apna Wallet is your place to start, using Sepolia test ETH.</p><div className="lp-actions"><a className="lp-button lp-button--gold" href="https://ethereum.org/en/" target="_blank" rel="noreferrer noopener">Explore Ethereum<LandingIcon name="external" /></a><a className="lp-button lp-button--outline" href="https://ethereum.org/en/developers/docs/intro-to-ethereum/" target="_blank" rel="noreferrer noopener"><LandingIcon name="book" />Read Docs</a></div></div>
           <EthereumVisual />
