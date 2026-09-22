@@ -1,0 +1,20 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="420 300 450 420" fill="none">
+  <defs>
+    <linearGradient id="wallet" x1="476" y1="380" x2="757" y2="707" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00eee2"/>
+      <stop offset=".48" stop-color="#00c9f3"/>
+      <stop offset="1" stop-color="#0785ff"/>
+    </linearGradient>
+    <linearGradient id="clasp" x1="763" y1="518" x2="785" y2="593" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00e5eb"/>
+      <stop offset="1" stop-color="#009bff"/>
+    </linearGradient>
+  </defs>
+  <path d="m746 370 23-46c4-8 11-11 19-8 8 3 11 10 7 18l-23 48c-3 7-9 9-15 6l-7-3c-6-3-7-9-4-15Zm43 29 43-22c8-4 15-1 18 6 4 8 1 15-6 19l-43 22c-6 3-10 1-13-5l-3-6c-3-6-2-11 4-14Z" fill="#00e7d7"/>
+  <path d="M451 466c9-23 20-34 43-47l156-83c24-13 52 0 59 29l7 37-222 37c-19 3-31 12-43 27Z" fill="url(#wallet)"/>
+  <path d="M439 515c-5-40 16-66 57-72l205-31c39-6 69 15 76 55l7 45-38 8c-24 5-36 23-31 49 4 26 20 42 45 36l34-9 3 28c6 35-17 61-53 64l-209 14c-43 3-69-18-77-59l-19-128Z" fill="url(#wallet)"/>
+  <path d="M475 540c6-24 20-36 43-43 36-11 66-17 99-18 40-2 69 18 77 54l5 34c7 40-11 65-46 75-30 8-63 12-106 12-39 0-63-20-70-52-5-23-7-42-2-62Z" fill="#09090b"/>
+  <path d="M508 589c-1-16 8-29 21-30 13-1 23 8 27 23m49-7c-1-16 8-29 21-31 13-1 23 8 27 23" stroke="#fafafa" stroke-width="20" stroke-linecap="round"/>
+  <path d="m753 523 46-12c8-2 12 2 13 9l7 55c1 8-2 12-10 14l-45 11c-20 5-34-7-38-28-4-23 7-44 27-49Z" fill="url(#clasp)"/>
+  <ellipse cx="759" cy="562" rx="17" ry="19" transform="rotate(-8 759 562)" fill="#fafafa"/>
+</svg>
